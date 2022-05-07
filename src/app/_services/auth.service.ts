@@ -7,39 +7,46 @@ import { User } from '../_models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-    private currentUserSubject: BehaviorSubject<User>;
-    public currentUser: Observable<User>;    
-    private _authenticated: boolean = false;
-
-    constructor(private http: HttpClient) {        
-        localStorage.removeItem('currentUser');
-        localStorage.removeItem('activeUser');
-        localStorage.removeItem('accessToken');
-        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
-        this.currentUser = this.currentUserSubject.asObservable().pipe(
-            filter(x => x != null)
-        );
+    private currentUser: BehaviorSubject<User>;
+    private authenticated: boolean = false;
+    private userKey : string = 'currentUser';
+    constructor(private http: HttpClient) {
+        this.currentUser = new BehaviorSubject<User>(null);
+        if(localStorage.getItem(this.userKey) != null){
+            this.setUser(JSON.parse(localStorage.getItem(this.userKey)));
+            this.authenticated = true;
+        }
+        else{
+            this.authenticated = false;
+        }       
     }
     set accessToken(token: string)
     {
-        localStorage.setItem('accessToken', token);
+        if(this.authenticated){
+            this.currentUser.value.token = token;
+            localStorage.setItem(this.userKey,JSON.stringify(this.currentUser.value));
+        }        
     }
 
     get accessToken(): string
     {
-       return localStorage.getItem('accessToken') ?? '';
+       var token : string = '';
+       if(this.authenticated){
+           token = this.currentUser.value.token;
+       }
+        return token ?? '';
     }
     public get currentUserValue(): User {
-        return this.currentUserSubject.value;
+        return this.currentUser.value;
     }
 
     login(UserCreds) {
         return this.http.post<any>(`${environment.apiUrl}/user/signin`, UserCreds)
             .pipe(map(user => {
                 const actUser = user;                
-                if (actUser && actUser.token) {
-                    this.setUser(actUser);
-                    this._authenticated = true;
+                if (actUser && actUser.token) {                    
+                    this.setUser(actUser);                    
+                    this.authenticated = true;
                 }
                 return user;
             }));
@@ -54,26 +61,21 @@ export class AuthService {
 
     logout() {        
         this.cleanLocalStorage();
-        this._authenticated = false;
-        this.currentUserSubject.next(null);
+        this.authenticated = false;
+        this.currentUser.next(null);
     }
     setUser(actUser): any {
         this.cleanLocalStorage();
         const newUser = new User(actUser);
-        localStorage.setItem('currentUser', JSON.stringify(newUser));
-        localStorage.setItem('activeUser',JSON.stringify(actUser));
-        this.accessToken = actUser.token;
-        this.currentUserSubject = new BehaviorSubject<User>(newUser);
-        this.currentUserSubject.next(newUser);
+        localStorage.setItem(this.userKey, JSON.stringify(newUser));
+        this.currentUser.next(newUser);        
     }
     cleanLocalStorage() : void{
-        localStorage.removeItem('currentUser');
-        localStorage.removeItem('activeUser');
-        localStorage.removeItem('accessToken');
+        localStorage.removeItem('currentUser');        
     }
     checkAutenticated(): Observable<boolean>
     {
-        if ( this._authenticated )
+        if ( this.authenticated )
         {
             return of(true);
         } 
@@ -83,7 +85,7 @@ export class AuthService {
         }       
     }    
     checkAutenticatedFunction() : boolean{
-        return this._authenticated; 
+        return this.authenticated; 
     }
     
 }

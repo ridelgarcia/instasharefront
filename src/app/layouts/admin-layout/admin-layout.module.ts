@@ -16,11 +16,12 @@ import { IconsComponent } from '../../icons/icons.component';
 import { MapsComponent } from '../../maps/maps.component';
 import { NotificationsComponent } from '../../notifications/notifications.component';
 import { UpgradeComponent } from '../../upgrade/upgrade.component';
-
+import { LandingModule } from 'app/landing/landing.module';
 
 @NgModule({
   imports: [
     CommonModule,
+    LandingModule,
     RouterModule.forChild(AdminLayoutRoutes),
     FormsModule,
     LbdModule,

@@ -34,7 +34,7 @@ export class SignInComponent implements OnInit {
   }
   signIn(): void
     {
-      console.log(this.userCreds);
+        
         if ( this.signInForm.invalid )
         {
             return;
@@ -47,19 +47,15 @@ export class SignInComponent implements OnInit {
         this.showAlert = false;
 
         this.userCreds.email = this.signInForm.controls.inputemail.value;
-        this.userCreds.password = this.signInForm.controls.inputpassword.value;
-        console.log(this.userCreds);
+        this.userCreds.password = this.signInForm.controls.inputpassword.value;        
         this._authService.login(this.userCreds)
         .pipe(first())
         .subscribe(
-            loginresponse => {  
-              console.log(loginresponse);              
+            loginresponse => {                             
                 if(this._authService.checkAutenticatedFunction()){
-                    console.log(loginresponse);
-
+                  this._router.navigate(['workspace']);
                 }
-                else{
-                  console.log("login failed");
+                else{                    
                     this.loginFailed();
                 }
 

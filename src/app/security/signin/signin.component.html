@@ -23,6 +23,12 @@
                                     <div class="form-group">
                                         <label for="inputemail">Email address</label>
                                         <input id="inputemail" [formControlName]="'inputemail'" type="email" class="form-control" placeholder="Email">
+                                        <div *ngIf="signInForm.get('inputemail').hasError('required')">
+                                            Email is required
+                                        </div>
+                                        <div *ngIf="signInForm.get('inputemail').hasError('email')">
+                                            Email is invalid
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -36,7 +42,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">                            
-                                    <button class="btn btn-info btn-fill pull-right" (click)="signIn()">Sign In</button>
+                                    <button class="btn btn-info btn-fill pull-right" [disabled]="signInForm.invalid" (click)="signIn()">Sign In</button>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
