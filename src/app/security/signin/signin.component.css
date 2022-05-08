@@ -1,3 +1,9 @@
 .row1 {
     margin-top: 20px;
  }
+
+ .ng-invalid.ng-dirty{
+    border-color:red;
+ }
+
+ 
