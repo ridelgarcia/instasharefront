@@ -6,9 +6,11 @@ export class RegisterHelper {
             return null;
         }
 
-        const password = control.parent.get('password');
-        const passwordConfirm = control.parent.get('passwordConfirm');
+        const password = control.parent.get('inputpassword');
+        const passwordConfirm = control.parent.get('inputpasswordconfirm');
 
+        console.log(password.value);
+        console.log(passwordConfirm.value);
         if (!password || !passwordConfirm) {
             return null;
         }
@@ -21,6 +23,6 @@ export class RegisterHelper {
             return null;
         }
 
-        return { 'passwordsNotMatching': true };
+        return { 'passwordsnotmatching': true };
     }
 };
