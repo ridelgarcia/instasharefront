@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable ,of } from 'rxjs';
 import {map, filter} from 'rxjs/operators';
 import { environment } from 'environments/environment';
-import { User } from '../_models';
+import { User } from '../_models/user.model';
+import { Role } from '../_models/role.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -40,8 +41,8 @@ export class AuthService {
         return this.currentUser.value;
     }
 
-    login(UserCreds) {
-        return this.http.post<any>(`${environment.apiUrl}/user/signin`, UserCreds)
+    login(email:string, password:string) {
+        return this.http.post<any>(`${environment.apiUrl}/user/signin`, {email,password})
             .pipe(map(user => {
                 const actUser = user;                
                 if (actUser && actUser.token) {                    
@@ -52,13 +53,18 @@ export class AuthService {
             }));
     }
 
-    register(email: string, firstName: string, lastName: string, phone: string, password: string, companyName: string) {
-        return this.http.post<any>(`${environment.apiUrl}/users/register`, { email, firstName, lastName, phone, password, companyName })
+    signup(name: string, lastname: string, email: string,  password: string, role: Role) {
+        return this.http.post<any>(`${environment.apiUrl}/user/signup`, { name, lastname, email, password,role})
             .pipe(map(user => {                
                 return user;
             }));
     }
-
+    checkEmail(email:string){
+        return this.http.post<any>(`${environment.apiUrl}/user/checkemail`, { email })
+            .pipe(map(response => {                
+                return response;
+            }));
+    }
     logout() {        
         this.cleanLocalStorage();
         this.authenticated = false;

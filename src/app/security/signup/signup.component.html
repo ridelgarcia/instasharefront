@@ -45,6 +45,9 @@
                                         <div class="text-danger small" *ngIf="signUpForm.get('inputemail').hasError('email') && signUpForm.controls['inputemail'].dirty">
                                             Email is invalid
                                         </div>
+                                        <div class="text-danger small" *ngIf="signUpForm.get('inputemail').hasError('emailexist') && signUpForm.controls['inputemail'].dirty">
+                                            Email already exist
+                                        </div>
                                     </div>
                                 </div>
                             </div>

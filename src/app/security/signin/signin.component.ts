@@ -14,10 +14,7 @@ export class SignInComponent implements OnInit {
 
   signInForm: FormGroup;
   loading : boolean = false;
-  userCreds : any =  {
-    email : "",
-    password : ""
-  };
+  
 
   constructor(
     private _authService: AuthService,
@@ -42,12 +39,12 @@ export class SignInComponent implements OnInit {
         this.loading = true;        
         this.signInForm.disable();        
 
-        this.userCreds.email = this.signInForm.controls.inputemail.value;
-        this.userCreds.password = this.signInForm.controls.inputpassword.value;        
-        this._authService.login(this.userCreds)
+        var email = this.signInForm.controls.inputemail.value;
+        var password = this.signInForm.controls.inputpassword.value;        
+        this._authService.login(email,password)
         .pipe(first())
         .subscribe(
-            loginresponse => {                             
+            signinresponse => {                             
                 if(this._authService.checkAutenticatedFunction()){
                   this._router.navigate(['workspace']);
                   
