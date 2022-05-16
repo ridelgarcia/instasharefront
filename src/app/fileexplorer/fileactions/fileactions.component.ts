@@ -11,23 +11,31 @@ import { StorageService } from 'app/_services/storage.service';
 export class FileActionsComponent implements OnInit {
 
   createFolderForm : FormGroup;
-  formVisible:boolean;
+  uploadFileForm : FormGroup;
+  formVisibleCreateFolder:boolean;
+  formVisibleUploadFile:boolean;
   constructor(private _formBuilder:FormBuilder,
     private _storage:StorageService,
     private _auth:AuthService) { }
 
   ngOnInit(): void {
-    this.formVisible = false;
+    this.formVisibleCreateFolder = false;
+    this.formVisibleUploadFile = false;
+    this.uploadFileForm = this._formBuilder.group({
+      file :[]
+    });
     this.createFolderForm = this._formBuilder.group({
       foldername     : ['', [Validators.required]]
       
   });
   }
   createfolderaction(){
-    this.formVisible = !this.formVisible;
+    this.formVisibleUploadFile = false;
+    this.formVisibleCreateFolder = !this.formVisibleCreateFolder;
   }
   uploadfileaction(){
-    console.log("upload file");
+    this.formVisibleCreateFolder = false;
+    this.formVisibleUploadFile = !this.formVisibleUploadFile;
   }
   createfoldersubmit(){
     let folderName = this.createFolderForm.controls.foldername.value;
@@ -37,14 +45,29 @@ export class FileActionsComponent implements OnInit {
           exist:true
         });
       } else if(response.errorCode == 0)
-        this.formVisible = !this.formVisible;
+        this.formVisibleCreateFolder = !this.formVisibleCreateFolder;
     },
     error=>{
-      this.formVisible = !this.formVisible;
+      this.formVisibleCreateFolder = !this.formVisibleCreateFolder;
     }
     );
   }
   navigatetoparentaction(){
     this._storage.navigateToParent();
+  }
+  onFileSelected(event){
+    let file:File = event.target.files[0];
+    if(file){
+      let fileReader = new FileReader();
+      fileReader.onload = (e) => {
+      console.log(fileReader.result);
+      this._storage.uploadFile(fileReader.result,file.name,this._auth.currentUserValue.id).pipe().subscribe(response=>{
+        console.log(response);
+      });
+    }
+    fileReader.readAsBinaryString(file);
+      
+    }
+    
   }
 }

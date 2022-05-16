@@ -1,10 +1,13 @@
 
 <div class="container-fluid row">
     <div class="col-md-11">
+        <form id="uploadFileForm"[formGroup]="uploadFileForm" *ngIf="formVisibleUploadFile">
+            <input type="file" [formControlName]="'file'" class="file-input full-width form-control" (change)="onFileSelected($event)" />
+        </form>        
         <form
                     id="createFolderForm"
                     [formGroup]="createFolderForm"
-                    *ngIf="formVisible"
+                    *ngIf="formVisibleCreateFolder"
                     >
             
             <div class="row">

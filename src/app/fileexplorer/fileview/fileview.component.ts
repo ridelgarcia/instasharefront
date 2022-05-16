@@ -33,7 +33,6 @@ export class FileViewComponent implements OnInit {
     this._storage.getCurrentPathContent(userId).pipe().subscribe(
       response=>{
         this.nodeContent.dataRows = response;        
-        console.log(this.nodeContent.dataRows);
     });
   }
   navigateTo(folderName:string){

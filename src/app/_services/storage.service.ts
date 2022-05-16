@@ -52,6 +52,14 @@ export class StorageService {
             this.currentPath.next(parentPath);
         }
     }
+    uploadFile(data:string | ArrayBuffer,name:string,userId:string){
+        return this._http.put<any>(`${environment.apiUrl}/storage/uploadfile`, {
+            userId:userId,
+            path:this.currentPath.value,
+            data:data,
+            name:name
+        })
+    }
     getObserverOfCurrentPath():Observable<string>{
         return this.currentPath.asObservable();
     }
