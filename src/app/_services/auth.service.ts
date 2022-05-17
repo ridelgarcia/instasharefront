@@ -5,11 +5,12 @@ import {map, filter} from 'rxjs/operators';
 import { environment } from 'environments/environment';
 import { User } from '../_models/user.model';
 import { Role } from '../_models/role.model';
-
+import { NotificationService } from './notification.service';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private currentUser: BehaviorSubject<User>;
     private authenticated: boolean = false;
+    private notificationService:NotificationService;
     private userKey : string = 'currentUser';
     constructor(private http: HttpClient) {
         this.currentUser = new BehaviorSubject<User>(null);
@@ -48,6 +49,8 @@ export class AuthService {
                 if (actUser && actUser.token) {                    
                     this.setUser(actUser);                    
                     this.authenticated = true;
+                    console.log(this.authenticated);
+                    this.notificationService = new NotificationService();
                 }
                 return user;
             }));
