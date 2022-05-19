@@ -3,8 +3,8 @@ export class Node {
     id: string;
     nodename: string;
     type: number;
-    createdAt:string
-    modifiedAt:string;
+    createdAt:Date
+    modifiedAt:Date;
     
     
     /**
@@ -18,8 +18,8 @@ export class Node {
             this.id = node.id;
             this.nodename = node.name;
             this.type = node.type;
-            this.createdAt = node.createdAt;
-            this.modifiedAt = node.modifiedAt;            
+            this.createdAt = new Date(1000*(node.createdAt));
+            this.modifiedAt = new Date(1000*(node.modifiedAt));            
         }
     }
     

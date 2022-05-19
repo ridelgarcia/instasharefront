@@ -24,9 +24,9 @@
                                         <i class="pe-7s-file"></i>                                            
                                         </a>
                                     </td>
-                                    <td><a (click)="navigateTo(node.name)">{{node.name}}</a></td>
-                                    <td>{{node.createdAt}}</td>
-                                    <td>{{node.modifiedAt}}</td>
+                                    <td><a (click)="navigateTo(node.nodename,node.type)">{{node.nodename}}</a></td>
+                                    <td>{{node.createdAt | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                                    <td>{{node.modifiedAt | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
                                 </tr>
                             </tbody>
                         </table>

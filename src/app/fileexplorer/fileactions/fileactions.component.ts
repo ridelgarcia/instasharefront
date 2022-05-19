@@ -35,6 +35,7 @@ export class FileActionsComponent implements OnInit {
   }
   uploadfileaction(){
     this.formVisibleCreateFolder = false;
+    this.uploadFileForm.controls.file.setValue("");
     this.formVisibleUploadFile = !this.formVisibleUploadFile;
   }
   createfoldersubmit(){
@@ -60,9 +61,8 @@ export class FileActionsComponent implements OnInit {
     if(file){
       let fileReader = new FileReader();
       fileReader.onload = (e) => {
-      console.log(fileReader.result);
       this._storage.uploadFile(fileReader.result,file.name,this._auth.currentUserValue.id).pipe().subscribe(response=>{
-        console.log(response);
+        this.formVisibleUploadFile = !this.formVisibleUploadFile;
       });
     }
     fileReader.readAsBinaryString(file);

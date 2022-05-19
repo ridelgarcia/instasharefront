@@ -10,9 +10,8 @@ import { NotificationService } from './notification.service';
 export class AuthService {
     private currentUser: BehaviorSubject<User>;
     private authenticated: boolean = false;
-    private notificationService:NotificationService;
     private userKey : string = 'currentUser';
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private notificationService:NotificationService) {
         this.currentUser = new BehaviorSubject<User>(null);
         if(localStorage.getItem(this.userKey) != null){
             this.setUser(JSON.parse(localStorage.getItem(this.userKey)));
@@ -48,9 +47,7 @@ export class AuthService {
                 const actUser = user;                
                 if (actUser && actUser.token) {                    
                     this.setUser(actUser);                    
-                    this.authenticated = true;
-                    console.log(this.authenticated);
-                    this.notificationService = new NotificationService();
+                    this.authenticated = true;                    
                 }
                 return user;
             }));
@@ -77,7 +74,8 @@ export class AuthService {
         this.cleanLocalStorage();
         const newUser = new User(actUser);
         localStorage.setItem(this.userKey, JSON.stringify(newUser));
-        this.currentUser.next(newUser);        
+        this.currentUser.next(newUser);
+        this.notificationService.openSessionForUser(newUser.id);        
     }
     cleanLocalStorage() : void{
         localStorage.removeItem('currentUser');        
